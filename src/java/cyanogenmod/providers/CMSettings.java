@@ -1077,6 +1077,11 @@ public final class CMSettings {
         public static final String SHOW_ALARM_ICON = "show_alarm_icon";
 
         /**
+         * @hide
+         */
+        public static final String SHOW_SU_INDICATOR = "show_su_indicator";
+
+        /**
          * Whether to show the IME switcher in the status bar
          * @hide
          */

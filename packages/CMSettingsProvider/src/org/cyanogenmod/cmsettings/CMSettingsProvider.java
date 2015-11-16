@@ -745,6 +745,12 @@ public class CMSettingsProvider extends ContentProvider {
         public static final String SHOW_ALARM_ICON = CMSettings.System.SHOW_ALARM_ICON;
 
         /**
+         * @hide
+         */
+        public static final String SHOW_SU_INDICATOR =
+                CMSettings.System.SHOW_SU_INDICATOR;
+
+        /**
          * Whether to show the IME switcher in the status bar
          * @hide
          */
