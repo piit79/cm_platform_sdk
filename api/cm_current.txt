@@ -231,6 +231,7 @@ package cyanogenmod.app {
     method public cyanogenmod.profiles.ConnectionSettings getSettingsForConnection(int);
     method public cyanogenmod.profiles.StreamSettings getSettingsForStream(int);
     method public java.util.Collection<cyanogenmod.profiles.StreamSettings> getStreamSettings();
+    method public int getTapToWakeMode();
     method public int getTriggerState(int, java.lang.String);
     method public java.util.ArrayList<cyanogenmod.app.Profile.ProfileTrigger> getTriggersFromType(int);
     method public java.util.UUID getUuid();
@@ -247,6 +248,7 @@ package cyanogenmod.app {
     method public void setScreenLockMode(cyanogenmod.profiles.LockSettings);
     method public void setSecondaryUuids(java.util.List<java.util.UUID>);
     method public void setStreamSettings(cyanogenmod.profiles.StreamSettings);
+    method public void setTapToWakeMode(int);
     method public void setTrigger(cyanogenmod.app.Profile.ProfileTrigger);
     method public void writeToParcel(android.os.Parcel, int);
   }
@@ -287,6 +289,13 @@ package cyanogenmod.app {
     method public int getState();
     method public int getType();
     method public void writeToParcel(android.os.Parcel, int);
+  }
+
+  public static class Profile.TapToWakeMode {
+    ctor public Profile.TapToWakeMode();
+    field public static final int DEFAULT = 0; // 0x0
+    field public static final int DISABLE = 2; // 0x2
+    field public static final int ENABLE = 1; // 0x1
   }
 
   public static class Profile.TriggerState {

@@ -96,6 +96,8 @@ public final class Profile implements Parcelable, Comparable {
 
     private int mNotificationLightMode = NotificationLightMode.DEFAULT;
 
+    private int mTapToWakeMode = TapToWakeMode.DEFAULT;
+
     /**
      * Lock modes of a device
      */
@@ -141,6 +143,18 @@ public final class Profile implements Parcelable, Comparable {
         /** Represents an enabled Notification light mode */
         public static final int ENABLE = 1;
         /** Represents a disabled Notification light mode */
+        public static final int DISABLE = 2;
+    }
+
+    /**
+     * Tap to wake modes available on a device
+     */
+    public static class TapToWakeMode {
+        /** Represents a default Tap to wake mode (user choice) */
+        public static final int DEFAULT = 0;
+        /** Represents an enabled Tap to wake mode */
+        public static final int ENABLE = 1;
+        /** Represents a disabled Tap to wake mode */
         public static final int DISABLE = 2;
     }
 
@@ -637,6 +651,7 @@ public final class Profile implements Parcelable, Comparable {
 
         // === ELDERBERRY ===
         dest.writeInt(mNotificationLightMode);
+        dest.writeInt(mTapToWakeMode);
 
         // Go back and write size
         int parcelableSize = dest.dataPosition() - startPosition;
@@ -714,6 +729,7 @@ public final class Profile implements Parcelable, Comparable {
         }
         if (parcelableVersion >= Build.CM_VERSION_CODES.ELDERBERRY) {
             mNotificationLightMode = in.readInt();
+            mTapToWakeMode = in.readInt();
         }
 
         in.setDataPosition(startPosition + parcelableSize);
@@ -926,6 +942,28 @@ public final class Profile implements Parcelable, Comparable {
     }
 
     /**
+     * Get the {@link TapToWakeMode} associated with the {@link Profile}
+     * @return
+     */
+    public int getTapToWakeMode() {
+        return mTapToWakeMode;
+    }
+
+    /**
+     * Set the {@link TapToWakeMode} associated with the {@link Profile}
+     * @return
+     */
+    public void setTapToWakeMode(int tapToWakeMode) {
+        if (tapToWakeMode < NotificationLightMode.DEFAULT
+                || tapToWakeMode > NotificationLightMode.DISABLE) {
+            mTapToWakeMode = TapToWakeMode.DEFAULT;
+        } else {
+            mTapToWakeMode = tapToWakeMode;
+        }
+        mDirty = true;
+    }
+
+    /**
      * Get the {@link AirplaneModeSettings} associated with the {@link Profile}
      * @return
      */
@@ -1038,6 +1076,10 @@ public final class Profile implements Parcelable, Comparable {
         builder.append("<notification-light-mode>");
         builder.append(mNotificationLightMode);
         builder.append("</notification-light-mode>\n");
+
+        builder.append("<tap-to-wake-mode>");
+        builder.append(mTapToWakeMode);
+        builder.append("</tap-to-wake-mode>\n");
 
         mAirplaneMode.getXmlString(builder, context);
 
@@ -1190,6 +1232,9 @@ public final class Profile implements Parcelable, Comparable {
                 if (name.equals("notification-light-mode")) {
                     profile.setNotificationLightMode(Integer.valueOf(xpp.nextText()));
                 }
+                if (name.equals("tap-to-wake-mode")) {
+                    profile.setTapToWakeMode(Integer.valueOf(xpp.nextText()));
+                }
                 if (name.equals("profileGroup")) {
                     ProfileGroup pg = ProfileGroup.fromXml(xpp, context);
                     profile.addProfileGroup(pg);
@@ -1268,6 +1313,14 @@ public final class Profile implements Parcelable, Comparable {
             Settings.System.putIntForUser(context.getContentResolver(),
                 Settings.System.NOTIFICATION_LIGHT_PULSE,
                     mNotificationLightMode == NotificationLightMode.ENABLE ? 1 : 0,
+                    UserHandle.USER_CURRENT);
+        }
+
+        // Set tap to wake mode
+        if (mTapToWakeMode != TapToWakeMode.DEFAULT) {
+            Settings.Secure.putIntForUser(context.getContentResolver(),
+                Settings.Secure.DOUBLE_TAP_TO_WAKE,
+                    mTapToWakeMode == TapToWakeMode.ENABLE ? 1 : 0,
                     UserHandle.USER_CURRENT);
         }
     }
